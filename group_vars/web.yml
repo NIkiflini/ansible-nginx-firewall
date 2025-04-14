@@ -1,0 +1,17 @@
+---
+# Пакеты для установки
+packages:
+  - net-tools
+  - curl
+  - nginx
+
+# Правила UFW
+ufw_rules:
+  - { port: 22, proto: tcp }
+  - { port: 80, proto: tcp }
+
+# Политики UFW по умолчанию
+ufw_default_policies:
+  - { direction: 'incoming', policy: 'deny' }
+  - { direction: 'outgoing', policy: 'allow' }
+  - { direction: 'routed', policy: 'deny' }

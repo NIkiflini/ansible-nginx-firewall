@@ -1,0 +1,48 @@
+---
+- name: Configure web servers
+  hosts: web
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+      listen: "restart web services"
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      tags: update
+
+    - name: Install required packages
+      apt:
+        name: "{{ packages }}"
+        state: present
+      notify: "restart web services"
+      tags: packages
+
+    - name: Ensure UFW is installed
+      apt:
+        name: ufw
+        state: present
+      tags: firewall
+
+    - name: Configure UFW rules
+      ufw:
+        rule: allow
+        port: "{{ item.port }}"
+        proto: "{{ item.proto }}"
+      loop: "{{ ufw_rules }}"
+      tags: firewall
+
+    - name: Set default UFW policies
+      ufw:
+        direction: "{{ item.direction }}"
+        policy: "{{ item.policy }}"
+      loop: "{{ ufw_default_policies }}"
+      tags: firewall
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+      tags: firewall

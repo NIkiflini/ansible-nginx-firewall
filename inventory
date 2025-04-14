@@ -1,0 +1,5 @@
+[web]
+web1 ansible_host=109.120.188.143  # IP второй ВМ
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
